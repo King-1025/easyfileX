@@ -1,4 +1,13 @@
 spring:
+  devtools:
+    restart: 
+      enabled: true 
+      additional-paths: src/java
+  http:
+    multipart:
+      max-file-size: 10M
+      max-request-size: 10M
+
   datasource:
     url: jdbc:mysql://39.106.72.49:3406/test?useUnicode=true&characterEncoding=utf8&useSSL=true
     driverClassName: com.mysql.cj.jdbc.Driver

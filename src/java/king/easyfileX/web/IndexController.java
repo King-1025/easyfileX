@@ -1,16 +1,19 @@
 package king.easyfileX.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-import king.easyfileX.service.LoginService;
 import king.easyfileX.model.Result;
+import king.easyfileX.service.LoginService;
 import king.gen.entity.Account;
 
-@RestController
+@Controller
 public class IndexController{
    
    @Autowired
@@ -20,7 +23,8 @@ public class IndexController{
    public String index(){
       return "forward:html/index.html";
    }
-
+   
+   @ResponseBody
    @RequestMapping("/doLogin")
    public Result login(@RequestParam(value="name") String name,@RequestParam(value="password") String password){
         Account account=new Account();
