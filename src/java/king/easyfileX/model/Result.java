@@ -4,8 +4,11 @@ public class Result{
    private int status;
    private Object content;
 
+   public static final int SUCCESS =  0;
+   public static final int FAILED  = -1;
+
    public Result(){
-       this(0,null);
+       this(SUCCESS,null);
    }
 
    public Result(int status,Object content){

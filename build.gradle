@@ -1,13 +1,13 @@
 plugins {
-  	id 'java'
-	  id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'java'
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
     id "com.arenagod.gradle.MybatisGenerator" version "1.4"
 }
 
 repositories {
     google()
     jcenter()
-	  mavenCentral()
+    mavenCentral()
 }
 
 apply plugin: 'io.spring.dependency-management'

@@ -25,10 +25,10 @@ public class SwaggerConfig {
     }
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("《SwaggerDemo的演示案例--》")
-                .description("description:项目摘要")
-                .termsOfServiceUrl("http://www.google.com.hk")
-                .contact(new Contact("King-1025", "https://github.com/King-1025","1543641386@qq.com"))
+                .title("《easyfileX - 文件云存》")
+                .description("项目摘要:")
+      //          .termsOfServiceUrl("http://www.google.com.hk")
+                .contact(new Contact("King-1025", "https://github.com/King-1025/easyfileX","1543641386@qq.com"))
                 .version("0.0.1")
                 .build();
     }

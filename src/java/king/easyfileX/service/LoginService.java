@@ -15,9 +15,10 @@ public class LoginService{
 
   public boolean login(Account account){
      AccountExample ae=new AccountExample();
-     ae.createCriteria().
-        andNameEqualTo(account.getName()).
-        andPasswordEqualTo(account.getPassword());
+     ae.
+     createCriteria().
+     andNameEqualTo(account.getName()).
+     andPasswordEqualTo(account.getPassword());
      return (accountMapper.countByExample(ae)>0);
   }
 }

@@ -25,8 +25,10 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import king.easyfileX.exception.StorageException;
+import king.easyfileX.exception.StorageFileNotFoundException;
 import king.easyfileX.model.Result;
 import king.easyfileX.service.StorageService;
+
 @Controller
 public class FileUploadController {
 
@@ -38,10 +40,12 @@ public class FileUploadController {
     }
 
     @ResponseBody 
-    @GetMapping("/filelist")
+    @GetMapping("/fileList")
     public Result listUploadedFiles() throws IOException {
        Result result=new Result();
-       result.setContent( //"files",
+
+       try {
+            result.setContent(
             storageService.
             loadAll().
             map(path -> MvcUriComponentsBuilder.fromMethodName(
@@ -49,33 +53,49 @@ public class FileUploadController {
                 "serveFile",
                 path.getFileName().toString()).build().toString()
               ).collect(Collectors.toList()));
-
+	} catch (Exception e){
+              e.printStackTrace();	      
+              result.setStatus(Result.FAILED);
+	      result.setContent("list file failed!");
+	}
+    
        return result;
-//        return "uploadForm";
     }
 
-    @GetMapping("/files/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+    @GetMapping("/files/{filename:.+}")
+    public Object serveFile(@PathVariable String filename) {
 
-        Resource file = storageService.loadAsResource(filename);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+	try {
+              Resource file = storageService.loadAsResource(filename);
+              return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+	} catch(Exception e) {
+              e.printStackTrace();	      
+              return new Result(Result.FAILED,"Not Found!");
+	}
     }
 
-    @PostMapping("/tmp")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-            RedirectAttributes redirectAttributes) {
+    @ResponseBody 
+    @PostMapping("/uploadFile")
+    public Result handleFileUpload(
+		    @RequestParam("file") MultipartFile file) {
+        Result result=new Result();
+        
+	try {
+              storageService.store(file);
+              result.setContent("You successfully uploaded " + file.getOriginalFilename() + "!");
+	} catch (Exception e){
+              e.printStackTrace();	      
+              result.setStatus(Result.FAILED);
+	      result.setContent("upload file failed!");
+	}
 
-        storageService.store(file);
-        redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded " + file.getOriginalFilename() + "!");
-
-        return "redirect:/";
+        return result;
     }
 
-     @ExceptionHandler(StorageException.class)
-     public ResponseEntity<?> handleStorageFileNotFound(StorageException exc) {
+    @ExceptionHandler(StorageFileNotFoundException.class)
+    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
-     }
+    }
 }
